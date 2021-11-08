@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?android:selectableItemBackground">
+
+    <TextView
+        android:id="@+id/showNameTv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Nome da série"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/releasedYearTv" />
+
+    <TextView
+        android:id="@+id/releasedYearTv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="textEnd"
+        android:text="Ano de lançamento"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/genreTv"
+        app:layout_constraintStart_toEndOf="@id/showNameTv"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/broadCasterTv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Emissora"
+        app:layout_constraintTop_toBottomOf="@id/showNameTv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/genreTv" />
+
+    <TextView
+        android:id="@+id/genreTv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Gênero"
+        android:textAlignment="textEnd"
+        android:textStyle="italic"
+        app:layout_constraintTop_toBottomOf="@id/showNameTv"
+        app:layout_constraintStart_toEndOf="@id/broadCasterTv"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
