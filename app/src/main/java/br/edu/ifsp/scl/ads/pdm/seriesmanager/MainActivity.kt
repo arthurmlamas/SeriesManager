@@ -1,7 +1,11 @@
 package br.edu.ifsp.scl.ads.pdm.seriesmanager
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.adapter.SeriesRvAdapter
@@ -10,9 +14,17 @@ import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.Show
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.onClickListeners.OnShowClickListener
 
 class MainActivity : AppCompatActivity(), OnShowClickListener {
+
+    companion object Extras {
+        const val EXTRA_SHOW = "EXTRA_SHOW"
+        const val EXTRA_POSITION = "EXTRA_POSITION"
+    }
+
     private val activityMainBinding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
+
+    private lateinit var showActivityResultLauncher: ActivityResultLauncher<Intent>
 
     private val seriesList: MutableList<Show> = mutableListOf()
     private val seriesRvAdapter: SeriesRvAdapter by lazy {
@@ -30,6 +42,15 @@ class MainActivity : AppCompatActivity(), OnShowClickListener {
         activityMainBinding.SeriesRv.layoutManager = seriesLayoutManager
 
         initializeSeriesList()
+
+        showActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                result.data?.getParcelableExtra<Show>(EXTRA_SHOW)?.apply {
+                    seriesList.add(this)
+                    seriesRvAdapter.notifyDataSetChanged()
+                }
+            }
+        }
 
     }
 
@@ -51,6 +72,9 @@ class MainActivity : AppCompatActivity(), OnShowClickListener {
     }
 
     override fun onShowClick(position: Int) {
-        position
+        val show = seriesList[position]
+        val displayShowIntent = Intent(this, SeasonActivity::class.java)
+        displayShowIntent.putExtra(EXTRA_SHOW, show)
+        showActivityResultLauncher.launch(displayShowIntent)
     }
 }
