@@ -42,7 +42,7 @@ class SeriesRvAdapter(
 
         with(holder) {
             showNameTv.text = show.title
-            releasedYearTv.text = show.releasedYear
+            releasedYearTv.text = show.releasedYear.toString()
             broadcasterTv.text = show.broadcaster
             genreTv.text = show.genre
             itemView.setOnClickListener {

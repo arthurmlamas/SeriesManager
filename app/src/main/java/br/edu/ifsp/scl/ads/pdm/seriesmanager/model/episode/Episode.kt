@@ -10,6 +10,6 @@ data class Episode (
     val episodeNumber: Int = 0,
     val title: String = "",
     val duration: Int = 0,
-    val seenFlag: Boolean = false,
+    val watchedFlag: Boolean = false,
     val season: Season
 ): Parcelable

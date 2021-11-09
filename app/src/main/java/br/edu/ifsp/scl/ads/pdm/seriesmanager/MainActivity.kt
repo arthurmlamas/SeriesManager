@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity(), OnShowClickListener {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
-    private lateinit var showActivityResultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var manageShowActivityResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var updateShowActivityResultLauncher: ActivityResultLauncher<Intent>
 
     private val seriesList: MutableList<Show> = mutableListOf()
@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity(), OnShowClickListener {
 
         initializeSeriesList()
 
-        showActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        manageShowActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.getParcelableExtra<Show>(EXTRA_SHOW)?.apply {
                     seriesList.add(this)
@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity(), OnShowClickListener {
         }
 
         activityMainBinding.addShowFab.setOnClickListener {
-            showActivityResultLauncher.launch(Intent(this, ShowActivity::class.java))
+            manageShowActivityResultLauncher.launch(Intent(this, ManageShowActivity::class.java))
         }
 
     }
@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity(), OnShowClickListener {
             seriesList.add(
                 Show(
                     "Série $index",
-                    "200${index}",
+                    2000 + index,
                     "Emissora $index",
                     "Drama"
                 )
@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity(), OnShowClickListener {
         val show = seriesList[position]
         return when (item.itemId) {
             R.id.updateShowMi -> {
-                val updateShowIntent = Intent(this, ShowActivity::class.java)
+                val updateShowIntent = Intent(this, ManageShowActivity::class.java)
                 updateShowIntent.putExtra(EXTRA_SHOW, show)
                 updateShowIntent.putExtra(EXTRA_SHOW_POSITION, position)
                 updateShowActivityResultLauncher.launch(updateShowIntent)
@@ -119,6 +119,6 @@ class MainActivity : AppCompatActivity(), OnShowClickListener {
         val show = seriesList[position]
         val displayShowIntent = Intent(this, SeasonActivity::class.java)
         displayShowIntent.putExtra(EXTRA_SHOW, show)
-        showActivityResultLauncher.launch(displayShowIntent)
+        manageShowActivityResultLauncher.launch(displayShowIntent)
     }
 }

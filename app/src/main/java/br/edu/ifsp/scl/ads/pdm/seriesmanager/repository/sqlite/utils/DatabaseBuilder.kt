@@ -13,7 +13,7 @@ class DatabaseBuilder(context: Context) {
 
         private val CREATE_TABLE_SERIE_STMT = "CREATE TABLE IF NOT EXISTS serie (" +
                 "nome TEXT NOT NULL PRIMARY KEY, " +
-                "ano_lancamento TEXT NOT NULL, " +
+                "ano_lancamento INTEGER NOT NULL, " +
                 "emissora TEXT NOT NULL, " +
                 "genero TEXT NOT NULL, " +
                 ");"
@@ -21,7 +21,7 @@ class DatabaseBuilder(context: Context) {
         private val CREATE_TABLE_TEMPORADA_STMT = "CREATE TABLE IF NOT EXISTS temporada (" +
                 "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
                 "numero_sequencial INTEGER NOT NULL, " +
-                "ano_lancamento TEXT NOT NULL, " +
+                "ano_lancamento INTEGER NOT NULL, " +
                 "serie_id TEXT NOT NULL, " +
                 "FOREIGN KEY (serie_id) REFERENCES serie(nome) ON DELETE CASCADE" +
                 ");"
