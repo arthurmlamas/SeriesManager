@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">SeriesManager</string>
+    <string-array name="genres">
+        <item>Ação</item>
+        <item>Aventura</item>
+        <item>Comédia</item>
+        <item>Documentário</item>
+        <item>Drama</item>
+        <item>Ficção científica</item>
+        <item>Musical</item>
+        <item>Policial</item>
+        <item>Romance</item>
+        <item>Suspense</item>
+        <item>Terror</item>
+    </string-array>
 </resources>

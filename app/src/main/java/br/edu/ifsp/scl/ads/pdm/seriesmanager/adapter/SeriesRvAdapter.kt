@@ -5,7 +5,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.R
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.LayoutShowBinding
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.Show
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.show.Show
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.onClickListeners.OnShowClickListener
 
 class SeriesRvAdapter(
@@ -17,7 +17,7 @@ class SeriesRvAdapter(
     inner class ShowLayoutHolder(layoutShowBinding: LayoutShowBinding): RecyclerView.ViewHolder(layoutShowBinding.root), View.OnCreateContextMenuListener {
         val showNameTv: TextView = layoutShowBinding.showNameTv
         val releasedYearTv: TextView = layoutShowBinding.releasedYearTv
-        val broadcasterTv: TextView = layoutShowBinding.broadCasterTv
+        val broadcasterTv: TextView = layoutShowBinding.broadcasterTv
         val genreTv: TextView = layoutShowBinding.genreTv
         init {
             itemView.setOnCreateContextMenuListener(this)

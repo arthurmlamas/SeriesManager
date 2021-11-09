@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SeriesManager">
         <activity
+            android:name=".ShowActivity"
+            android:exported="true" />
+        <activity
             android:name=".SeasonActivity"
             android:exported="true" />
         <activity

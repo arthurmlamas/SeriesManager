@@ -5,7 +5,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.R
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.LayoutSeasonBinding
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.Season
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.season.Season
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.onClickListeners.OnSeasonClickListener
 
 class SeasonsRvAdapter(

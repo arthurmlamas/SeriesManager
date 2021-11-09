@@ -1,4 +1,4 @@
-package br.edu.ifsp.scl.ads.pdm.seriesmanager.model
+package br.edu.ifsp.scl.ads.pdm.seriesmanager.model.show
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

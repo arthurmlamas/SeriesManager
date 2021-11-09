@@ -1,14 +1,13 @@
 package br.edu.ifsp.scl.ads.pdm.seriesmanager
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.adapter.SeasonsRvAdapter
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivitySeasonBinding
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.Season
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.Show
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.season.Season
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.show.Show
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.onClickListeners.OnSeasonClickListener
 
 class SeasonActivity : AppCompatActivity(), OnSeasonClickListener {
