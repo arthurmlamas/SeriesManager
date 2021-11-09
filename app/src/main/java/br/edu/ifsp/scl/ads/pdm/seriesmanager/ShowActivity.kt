@@ -6,15 +6,12 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import androidx.core.view.get
-import androidx.core.view.size
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivityShowBinding
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.show.Show
 
 class ShowActivity : AppCompatActivity() {
     private var showPosition = -1
     private lateinit var show: Show
-
 
     private val activityShowBinding: ActivityShowBinding by lazy {
         ActivityShowBinding.inflate(layoutInflater)
@@ -25,12 +22,28 @@ class ShowActivity : AppCompatActivity() {
         setContentView(activityShowBinding.root)
 
         val genresList: MutableList<String> = mutableListOf()
-        for (i in 0 until activityShowBinding.genreSp.size) {
-            genresList.add((activityShowBinding.genreSp[i] as TextView).text.toString())
-//            genresList.add(resources.getIdentifier(activityShowBinding.genreSp[i].toString(), "values", packageName))
+        for (i in 0 until activityShowBinding.genreSp.count) {
+            genresList.add(activityShowBinding.genreSp.getItemAtPosition(i).toString())
         }
         val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter(this, android.R.layout.simple_spinner_item, genresList)
         activityShowBinding.genreSp.adapter = spinnerAdapter
+
+        showPosition = intent.getIntExtra(MainActivity.EXTRA_SHOW_POSITION, -1)
+        intent.getParcelableExtra<Show>(MainActivity.EXTRA_SHOW)?.apply {
+            with(activityShowBinding) {
+                showNameEt.isEnabled = false
+                showNameEt.setText(this@apply.title)
+                releasedYearEt.setText(this@apply.releasedYear)
+                broadcasterEt.setText(this@apply.broadcaster)
+                genreSp.setSelection(spinnerAdapter.getPosition(this@apply.genre))
+                if (showPosition == -1) {
+                    for (i in 0 until (root.childCount - 1)) {
+                        root.getChildAt(i).isEnabled = false
+                    }
+                    saveBt.visibility = View.GONE
+                }
+            }
+        }
 
         activityShowBinding.saveBt.setOnClickListener {
             with(activityShowBinding) {
@@ -51,21 +64,5 @@ class ShowActivity : AppCompatActivity() {
             finish()
         }
 
-        intent.getIntExtra(MainActivity.EXTRA_SHOW_POSITION, -1)
-        intent.getParcelableExtra<Show>(MainActivity.EXTRA_SHOW)?.apply {
-            with(activityShowBinding) {
-                showNameEt.isEnabled = false
-                showNameEt.setText(this@apply.title)
-                releasedYearEt.setText(this@apply.releasedYear)
-                broadcasterEt.setText(this@apply.broadcaster)
-                genreSp.setSelection(spinnerAdapter.getPosition(this@apply.genre))
-                if (showPosition != -1) {
-                    for (i in 0 until (root.childCount - 1)) {
-                        root.getChildAt(i).isEnabled = false
-                    }
-                    saveBt.visibility = View.GONE
-                }
-            }
-        }
     }
 }
