@@ -1,11 +1,15 @@
 package br.edu.ifsp.scl.ads.pdm.seriesmanager.repository.sqlite.dao
 
 import android.content.Context
+import android.database.sqlite.SQLiteDatabase
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.show.Show
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.show.ShowDAO
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.repository.sqlite.utils.DatabaseBuilder
 
 class SqliteShowDAO(context: Context): ShowDAO {
-    override fun create(show: Show): String {
+    private val seriesManagerDB: SQLiteDatabase = DatabaseBuilder(context).getDB()
+
+    override fun create(show: Show): Long {
         TODO("Not yet implemented")
     }
 
