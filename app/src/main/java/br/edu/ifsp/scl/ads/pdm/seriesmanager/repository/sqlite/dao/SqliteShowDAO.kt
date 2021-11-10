@@ -1,5 +1,6 @@
 package br.edu.ifsp.scl.ads.pdm.seriesmanager.repository.sqlite.dao
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.show.Show
@@ -9,23 +10,80 @@ import br.edu.ifsp.scl.ads.pdm.seriesmanager.repository.sqlite.utils.DatabaseBui
 class SqliteShowDAO(context: Context): ShowDAO {
     private val seriesManagerDB: SQLiteDatabase = DatabaseBuilder(context).getDB()
 
-    override fun create(show: Show): Long {
-        TODO("Not yet implemented")
-    }
+    override fun create(show: Show) = seriesManagerDB.insert(DatabaseBuilder.TABLE_SHOW, null, convertShowToContentValues(show))
 
     override fun findOne(title: String): Show {
-        TODO("Not yet implemented")
+        val showCursor = seriesManagerDB.query(
+            true,
+            DatabaseBuilder.TABLE_SHOW,
+            null,
+            "${DatabaseBuilder.SHOW_COLUMN_NAME} = ?",
+            arrayOf(title),
+            null,
+            null,
+            null,
+            null
+        )
+
+        return if (showCursor.moveToFirst()) {
+            with(showCursor) {
+                Show(
+                    getString(getColumnIndexOrThrow(DatabaseBuilder.SHOW_COLUMN_NAME)),
+                    getInt(getColumnIndexOrThrow(DatabaseBuilder.SHOW_COLUMN_RELEASED_YEAR)),
+                    getString(getColumnIndexOrThrow(DatabaseBuilder.SHOW_COLUMN_BROADCASTER)),
+                    getString(getColumnIndexOrThrow(DatabaseBuilder.SHOW_COLUMN_GENRE))
+                )
+            }
+        }
+        else { Show() }
     }
 
     override fun findAll(): MutableList<Show> {
-        TODO("Not yet implemented")
+        val seriesList: MutableList<Show> = mutableListOf()
+
+        val showCursor = seriesManagerDB.query(
+            true,
+            DatabaseBuilder.TABLE_SHOW,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        )
+
+        while (showCursor.moveToNext()) {
+            with(showCursor) {
+                seriesList.add(
+                    Show(
+                    getString(getColumnIndexOrThrow(DatabaseBuilder.SHOW_COLUMN_NAME)),
+                    getInt(getColumnIndexOrThrow(DatabaseBuilder.SHOW_COLUMN_RELEASED_YEAR)),
+                    getString(getColumnIndexOrThrow(DatabaseBuilder.SHOW_COLUMN_BROADCASTER)),
+                    getString(getColumnIndexOrThrow(DatabaseBuilder.SHOW_COLUMN_GENRE))
+                )
+                )
+            }
+        }
+
+        return seriesList
     }
 
     override fun update(show: Show): Int {
-        TODO("Not yet implemented")
+        val showCv = convertShowToContentValues(show)
+        return seriesManagerDB.update(DatabaseBuilder.TABLE_SHOW, showCv,"${DatabaseBuilder.SHOW_COLUMN_NAME} = ?", arrayOf(show.title))
     }
 
     override fun delete(title: String): Int {
-        TODO("Not yet implemented")
+        return seriesManagerDB.delete(DatabaseBuilder.TABLE_SHOW,"${DatabaseBuilder.SHOW_COLUMN_NAME} = ?", arrayOf(title))
+    }
+
+    private fun convertShowToContentValues(show: Show) = ContentValues().also {
+        with(it) {
+            put(DatabaseBuilder.SHOW_COLUMN_NAME, show.title)
+            put(DatabaseBuilder.SHOW_COLUMN_RELEASED_YEAR, show.releasedYear)
+            put(DatabaseBuilder.SHOW_COLUMN_BROADCASTER, show.broadcaster)
+            put(DatabaseBuilder.SHOW_COLUMN_GENRE, show.genre)
+        }
     }
 }

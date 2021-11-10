@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.adapter.SeriesRvAdapter
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.controller.ShowController
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivityMainBinding
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.show.Show
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.onClickListeners.OnShowClickListener
@@ -28,7 +29,13 @@ class MainActivity : AppCompatActivity(), OnShowClickListener {
     private lateinit var manageShowActivityResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var updateShowActivityResultLauncher: ActivityResultLauncher<Intent>
 
-    private val seriesList: MutableList<Show> = mutableListOf()
+    private val seriesList: MutableList<Show> by lazy {
+        showController.findAllSeries()
+    }
+
+    private val showController: ShowController by lazy {
+        ShowController(this)
+    }
     private val seriesRvAdapter: SeriesRvAdapter by lazy {
         SeriesRvAdapter(this, seriesList)
     }
@@ -43,11 +50,10 @@ class MainActivity : AppCompatActivity(), OnShowClickListener {
         activityMainBinding.SeriesRv.adapter = seriesRvAdapter
         activityMainBinding.SeriesRv.layoutManager = seriesLayoutManager
 
-        initializeSeriesList()
-
         manageShowActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.getParcelableExtra<Show>(EXTRA_SHOW)?.apply {
+                    showController.insertShow(this)
                     seriesList.add(this)
                     seriesRvAdapter.notifyDataSetChanged()
                 }
@@ -59,6 +65,7 @@ class MainActivity : AppCompatActivity(), OnShowClickListener {
                 val position = result.data?.getIntExtra(EXTRA_SHOW_POSITION, -1)
                 result.data?.getParcelableExtra<Show>(EXTRA_SHOW)?.apply {
                     if (position != null && position != -1) {
+                        showController.updateShow(this)
                         seriesList[position] = this
                         seriesRvAdapter.notifyDataSetChanged()
                     }
@@ -68,20 +75,6 @@ class MainActivity : AppCompatActivity(), OnShowClickListener {
 
         activityMainBinding.addShowFab.setOnClickListener {
             manageShowActivityResultLauncher.launch(Intent(this, ManageShowActivity::class.java))
-        }
-
-    }
-
-    private fun initializeSeriesList() {
-        for (index in 1..10) {
-            seriesList.add(
-                Show(
-                    "Série $index",
-                    2000 + index,
-                    "Emissora $index",
-                    "Drama"
-                )
-            )
         }
     }
 
@@ -100,6 +93,7 @@ class MainActivity : AppCompatActivity(), OnShowClickListener {
                 with(AlertDialog.Builder(this)) {
                     setMessage("Confirma remoção?")
                     setPositiveButton("Sim") { _, _ ->
+                        showController.deleteShow(show.title)
                         seriesList.removeAt(position)
                         seriesRvAdapter.notifyDataSetChanged()
                         Snackbar.make(activityMainBinding.root, "Série removída!", Snackbar.LENGTH_SHORT).show()

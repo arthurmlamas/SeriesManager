@@ -15,13 +15,13 @@ class DatabaseBuilder(context: Context) {
         const val SHOW_COLUMN_NAME = "nome"
         const val SHOW_COLUMN_RELEASED_YEAR = "ano_lancamento"
         const val SHOW_COLUMN_BROADCASTER = "emissora"
-        const val SHOW_COLUMN_GENRE = "genre"
+        const val SHOW_COLUMN_GENRE = "genero"
 
         const val CREATE_TABLE_SHOW_STMT = "CREATE TABLE IF NOT EXISTS $TABLE_SHOW (" +
                 "$SHOW_COLUMN_NAME TEXT NOT NULL PRIMARY KEY, " +
                 "$SHOW_COLUMN_RELEASED_YEAR INTEGER NOT NULL, " +
                 "$SHOW_COLUMN_BROADCASTER TEXT NOT NULL, " +
-                "$SHOW_COLUMN_GENRE TEXT NOT NULL, " +
+                "$SHOW_COLUMN_GENRE TEXT NOT NULL" +
                 ");"
 
         const val TABLE_SEASON = "temporada"
