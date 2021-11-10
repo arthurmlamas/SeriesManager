@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -44,8 +43,8 @@ class SeasonActivity : AppCompatActivity(), OnSeasonClickListener {
         super.onCreate(savedInstanceState)
         setContentView(activitySeasonBinding.root)
 
-        activitySeasonBinding.SeasonsRv.adapter = seasonsRvAdapter
-        activitySeasonBinding.SeasonsRv.layoutManager = seasonsLayoutManager
+        activitySeasonBinding.seasonsRv.adapter = seasonsRvAdapter
+        activitySeasonBinding.seasonsRv.layoutManager = seasonsLayoutManager
 
         intent.getParcelableExtra<Show>(MainActivity.EXTRA_SHOW)?.run {
             show = this
@@ -53,8 +52,6 @@ class SeasonActivity : AppCompatActivity(), OnSeasonClickListener {
         }
 
         initializeSeasonsList()
-
-        println("Nome da série de cada temporada" + seasonsList.iterator().next().show.title)
 
         manageSeasonActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
@@ -130,6 +127,8 @@ class SeasonActivity : AppCompatActivity(), OnSeasonClickListener {
 
     override fun onSeasonClick(position: Int) {
         val season = seasonsList[position]
-        Toast.makeText(this, season.seasonNumber.toString(), Toast.LENGTH_SHORT).show()
+        val displaySeasonIntent = Intent(this, EpisodeActivity::class.java)
+        displaySeasonIntent.putExtra(EXTRA_SEASON, season)
+        manageSeasonActivityResultLauncher.launch(displaySeasonIntent)
     }
 }

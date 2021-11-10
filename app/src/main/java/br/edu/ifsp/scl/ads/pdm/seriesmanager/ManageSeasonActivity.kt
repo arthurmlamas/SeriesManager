@@ -27,10 +27,9 @@ class ManageSeasonActivity : AppCompatActivity() {
             activityManageSeasonBinding.showNameTv.text = this.title
         }
         seasonPosition = intent.getIntExtra(SeasonActivity.EXTRA_SEASON_POSITION, -1)
-        println("[AQUI]seasonPosition = ${seasonPosition}")
         intent.getParcelableExtra<Season>(SeasonActivity.EXTRA_SEASON)?.apply {
             with(activityManageSeasonBinding) {
-                showNameTv.text = (this@apply.show.title)
+                showNameTv.text = this@apply.show.title
                 seasonNumberEt.setText(this@apply.seasonNumber.toString())
                 seasonReleasedYearEt.setText(this@apply.releasedYear.toString())
                 seasonNumOfEpisodesEt.setText(this@apply.numOfEpisodes.toString())

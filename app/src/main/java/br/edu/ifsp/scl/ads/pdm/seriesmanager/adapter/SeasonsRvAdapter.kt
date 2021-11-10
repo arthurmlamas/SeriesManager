@@ -41,9 +41,9 @@ class SeasonsRvAdapter(
         val season = seasonsList[position]
 
         with(holder) {
-            seasonNumberTv.text = "${season.seasonNumber}ª Temporada"
+            "${season.seasonNumber}ª Temporada".also { seasonNumberTv.text = it }
             seasonReleasedYearTv.text = season.releasedYear.toString()
-            seasonNumOfEpisodesTv.text = "${season.numOfEpisodes} episódios"
+            "${season.numOfEpisodes} episódios".also { seasonNumOfEpisodesTv.text = it }
             itemView.setOnClickListener {
                 onSeasonClickListener.onSeasonClick(position)
             }

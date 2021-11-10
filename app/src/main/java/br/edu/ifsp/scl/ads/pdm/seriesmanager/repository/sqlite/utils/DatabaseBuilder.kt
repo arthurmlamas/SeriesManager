@@ -9,16 +9,16 @@ import br.edu.ifsp.scl.ads.pdm.seriesmanager.R
 
 class DatabaseBuilder(context: Context) {
     companion object {
-        private val BD_SERIES_MANAGER = "series_manager"
+        private const val BD_SERIES_MANAGER = "series_manager"
 
-        private val CREATE_TABLE_SERIE_STMT = "CREATE TABLE IF NOT EXISTS serie (" +
+        private const val CREATE_TABLE_SERIE_STMT = "CREATE TABLE IF NOT EXISTS serie (" +
                 "nome TEXT NOT NULL PRIMARY KEY, " +
                 "ano_lancamento INTEGER NOT NULL, " +
                 "emissora TEXT NOT NULL, " +
                 "genero TEXT NOT NULL, " +
                 ");"
 
-        private val CREATE_TABLE_TEMPORADA_STMT = "CREATE TABLE IF NOT EXISTS temporada (" +
+        private const val CREATE_TABLE_TEMPORADA_STMT = "CREATE TABLE IF NOT EXISTS temporada (" +
                 "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
                 "numero_sequencial INTEGER NOT NULL, " +
                 "ano_lancamento INTEGER NOT NULL, " +
@@ -26,7 +26,7 @@ class DatabaseBuilder(context: Context) {
                 "FOREIGN KEY (serie_id) REFERENCES serie(nome) ON DELETE CASCADE" +
                 ");"
 
-        private val CREATE_TABLE_EPISODIO_STMT = "CREATE TABLE IF NOT EXISTS episodio (" +
+        private const val CREATE_TABLE_EPISODIO_STMT = "CREATE TABLE IF NOT EXISTS episodio (" +
                 "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
                 "numero_sequencial INTEGER NOT NULL, " +
                 "nome TEXT NOT NULL, " +
@@ -37,10 +37,10 @@ class DatabaseBuilder(context: Context) {
                 ");"
     }
 
-    private val seriesManagerDB: SQLiteDatabase
+    private val seriesManagerDB: SQLiteDatabase =
+        context.openOrCreateDatabase(BD_SERIES_MANAGER, MODE_PRIVATE, null)
 
     init {
-        seriesManagerDB = context.openOrCreateDatabase(BD_SERIES_MANAGER, MODE_PRIVATE, null)
         try {
             with(seriesManagerDB) {
                 execSQL(CREATE_TABLE_SERIE_STMT)
@@ -52,7 +52,7 @@ class DatabaseBuilder(context: Context) {
         }
     }
 
-    public fun getDB(): SQLiteDatabase {
+    fun getDB(): SQLiteDatabase {
         return seriesManagerDB
     }
 }

@@ -3,7 +3,7 @@ package br.edu.ifsp.scl.ads.pdm.seriesmanager.controller
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.MainActivity
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.show.Show
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.show.ShowDAO
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.repository.sqlite.DAO.SqliteShowDAO
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.repository.sqlite.dao.SqliteShowDAO
 
 class ShowController(mainActivity: MainActivity) {
     private val showDAO: ShowDAO = SqliteShowDAO(mainActivity)

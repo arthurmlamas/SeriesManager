@@ -1,4 +1,4 @@
-package br.edu.ifsp.scl.ads.pdm.seriesmanager.repository.sqlite.DAO
+package br.edu.ifsp.scl.ads.pdm.seriesmanager.repository.sqlite.dao
 
 import android.content.Context
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.episode.Episode

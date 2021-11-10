@@ -3,7 +3,7 @@ package br.edu.ifsp.scl.ads.pdm.seriesmanager.controller
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.SeasonActivity
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.season.Season
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.season.SeasonDAO
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.repository.sqlite.DAO.SqliteSeasonDAO
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.repository.sqlite.dao.SqliteSeasonDAO
 
 class SeasonController(seasonActivity: SeasonActivity) {
     private val seasonDAO: SeasonDAO = SqliteSeasonDAO(seasonActivity)
