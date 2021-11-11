@@ -13,6 +13,7 @@ class ManageSeasonActivity : AppCompatActivity() {
 
     private lateinit var season: Season
     private lateinit var show: Show
+    private var seasonId: Long? = null
 
     private val activityManageSeasonBinding: ActivityManageSeasonBinding by lazy {
         ActivityManageSeasonBinding.inflate(layoutInflater)
@@ -28,6 +29,7 @@ class ManageSeasonActivity : AppCompatActivity() {
         }
         seasonPosition = intent.getIntExtra(SeasonActivity.EXTRA_SEASON_POSITION, -1)
         intent.getParcelableExtra<Season>(SeasonActivity.EXTRA_SEASON)?.apply {
+            this@ManageSeasonActivity.seasonId = this.seasonId!!
             with(activityManageSeasonBinding) {
                 showNameTv.text = this@apply.show.title
                 seasonNumberEt.setText(this@apply.seasonNumber.toString())
@@ -46,7 +48,7 @@ class ManageSeasonActivity : AppCompatActivity() {
         activityManageSeasonBinding.saveBt.setOnClickListener {
             with(activityManageSeasonBinding) {
                 season = Season(
-                    null,
+                    seasonId,
                     this.seasonNumberEt.text.toString().toInt(),
                     this.seasonReleasedYearEt.text.toString().toInt(),
                     this.seasonNumOfEpisodesEt.text.toString().toInt(),

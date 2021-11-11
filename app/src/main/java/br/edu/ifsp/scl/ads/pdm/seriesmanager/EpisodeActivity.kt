@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.adapter.EpisodesRvAdapter
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.controller.EpisodeController
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivityEpisodeBinding
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.episode.Episode
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.season.Season
@@ -32,6 +33,9 @@ class EpisodeActivity : AppCompatActivity(), OnEpisodeClickListener {
     private lateinit var updateEpisodeActivityResultLauncher: ActivityResultLauncher<Intent>
 
     private val episodesList: MutableList<Episode> = mutableListOf()
+    private val episodeController: EpisodeController by lazy {
+        EpisodeController(this)
+    }
     private val episodesRvAdapter: EpisodesRvAdapter by lazy {
         EpisodesRvAdapter(this, episodesList)
     }

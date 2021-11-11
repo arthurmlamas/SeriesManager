@@ -1,9 +1,9 @@
 package br.edu.ifsp.scl.ads.pdm.seriesmanager.model.episode
 
 interface EpisodeDAO {
-    fun create(episode: Episode): Long
-    fun findOne(episodeId: Long): Episode
-    fun findAll(): MutableList<Episode>
-    fun update(episode: Episode): Int
-    fun delete(episodeId: Long): Int
+    fun createEpisode(episode: Episode): Long
+    fun findOneEpisode(episodeId: Long): Episode
+    fun findAllEpisodesOfSeason(seasonId: Long): MutableList<Episode>
+    fun updateEpisode(episode: Episode): Int
+    fun deleteEpisode(episodeId: Long): Int
 }

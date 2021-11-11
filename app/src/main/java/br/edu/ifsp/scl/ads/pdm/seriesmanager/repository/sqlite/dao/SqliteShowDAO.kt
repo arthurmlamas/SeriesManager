@@ -8,12 +8,12 @@ import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.show.ShowDAO
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.repository.sqlite.utils.DatabaseBuilder
 
 class SqliteShowDAO(context: Context): ShowDAO {
-    private val seriesManagerDB: SQLiteDatabase = DatabaseBuilder(context).getDB()
+    private val db: SQLiteDatabase = DatabaseBuilder(context).getDB()
 
-    override fun create(show: Show) = seriesManagerDB.insert(DatabaseBuilder.TABLE_SHOW, null, convertShowToContentValues(show))
+    override fun createShow(show: Show) = db.insert(DatabaseBuilder.TABLE_SHOW, null, convertShowToContentValues(show))
 
-    override fun findOne(title: String): Show {
-        val showCursor = seriesManagerDB.query(
+    override fun findOneShow(title: String): Show {
+        val showCursor = db.query(
             true,
             DatabaseBuilder.TABLE_SHOW,
             null,
@@ -38,10 +38,10 @@ class SqliteShowDAO(context: Context): ShowDAO {
         else { Show() }
     }
 
-    override fun findAll(): MutableList<Show> {
+    override fun findAllSeries(): MutableList<Show> {
         val seriesList: MutableList<Show> = mutableListOf()
 
-        val showCursor = seriesManagerDB.query(
+        val showCursor = db.query(
             true,
             DatabaseBuilder.TABLE_SHOW,
             null,
@@ -69,13 +69,14 @@ class SqliteShowDAO(context: Context): ShowDAO {
         return seriesList
     }
 
-    override fun update(show: Show): Int {
+    override fun updateShow(show: Show): Int {
         val showCv = convertShowToContentValues(show)
-        return seriesManagerDB.update(DatabaseBuilder.TABLE_SHOW, showCv,"${DatabaseBuilder.SHOW_COLUMN_NAME} = ?", arrayOf(show.title))
+        return db.update(DatabaseBuilder.TABLE_SHOW, showCv,"${DatabaseBuilder.SHOW_COLUMN_NAME} = ?", arrayOf(show.title))
     }
 
-    override fun delete(title: String): Int {
-        return seriesManagerDB.delete(DatabaseBuilder.TABLE_SHOW,"${DatabaseBuilder.SHOW_COLUMN_NAME} = ?", arrayOf(title))
+    override fun deleteShow(title: String): Int {
+        db.execSQL(DatabaseBuilder.BD_PRAGMA_FK_ON)
+        return db.delete(DatabaseBuilder.TABLE_SHOW,"${DatabaseBuilder.SHOW_COLUMN_NAME} = ?", arrayOf(title))
     }
 
     private fun convertShowToContentValues(show: Show) = ContentValues().also {

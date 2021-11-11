@@ -1,9 +1,9 @@
 package br.edu.ifsp.scl.ads.pdm.seriesmanager.model.show
 
 interface ShowDAO {
-    fun create(show: Show): Long
-    fun findOne(title: String): Show
-    fun findAll(): MutableList<Show>
-    fun update(show: Show): Int
-    fun delete(title: String): Int
+    fun createShow(show: Show): Long
+    fun findOneShow(title: String): Show
+    fun findAllSeries(): MutableList<Show>
+    fun updateShow(show: Show): Int
+    fun deleteShow(title: String): Int
 }

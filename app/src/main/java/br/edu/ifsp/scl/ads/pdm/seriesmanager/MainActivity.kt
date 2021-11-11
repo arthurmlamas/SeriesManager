@@ -32,7 +32,6 @@ class MainActivity : AppCompatActivity(), OnShowClickListener {
     private val seriesList: MutableList<Show> by lazy {
         showController.findAllSeries()
     }
-
     private val showController: ShowController by lazy {
         ShowController(this)
     }

@@ -10,6 +10,7 @@ import br.edu.ifsp.scl.ads.pdm.seriesmanager.R
 class DatabaseBuilder(context: Context) {
     companion object {
         const val BD_SERIES_MANAGER = "series_manager"
+        const val BD_PRAGMA_FK_ON = "PRAGMA foreign_keys=on;"
 
         const val TABLE_SHOW = "serie"
         const val SHOW_COLUMN_NAME = "nome"

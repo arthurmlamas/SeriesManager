@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.adapter.SeasonsRvAdapter
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.controller.SeasonController
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivitySeasonBinding
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.season.Season
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.show.Show
@@ -32,6 +33,9 @@ class SeasonActivity : AppCompatActivity(), OnSeasonClickListener {
     private lateinit var updateSeasonActivityResultLauncher: ActivityResultLauncher<Intent>
 
     private val seasonsList: MutableList<Season> = mutableListOf()
+    private val seasonController: SeasonController by lazy {
+        SeasonController(this)
+    }
     private val seasonsRvAdapter: SeasonsRvAdapter by lazy {
         SeasonsRvAdapter(this, seasonsList)
     }
@@ -51,11 +55,12 @@ class SeasonActivity : AppCompatActivity(), OnSeasonClickListener {
             activitySeasonBinding.showNameTv.text = this.title
         }
 
-        initializeSeasonsList()
+        seasonsList.addAll(seasonController.findAllSeasonsOfShow(show.title))
 
         manageSeasonActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.getParcelableExtra<Season>(EXTRA_SEASON)?.apply {
+                    seasonController.insertSeason(this)
                     seasonsList.add(this)
                     seasonsRvAdapter.notifyDataSetChanged()
                 }
@@ -67,6 +72,7 @@ class SeasonActivity : AppCompatActivity(), OnSeasonClickListener {
                 val position = result.data?.getIntExtra(EXTRA_SEASON_POSITION, -1)
                 result.data?.getParcelableExtra<Season>(EXTRA_SEASON)?.apply {
                     if (position != null && position != -1) {
+                        seasonController.updateSeason(this)
                         seasonsList[position] = this
                         seasonsRvAdapter.notifyDataSetChanged()
                     }
@@ -78,20 +84,6 @@ class SeasonActivity : AppCompatActivity(), OnSeasonClickListener {
             val addSeasonIntent = Intent(this, ManageSeasonActivity::class.java)
             addSeasonIntent.putExtra(MainActivity.EXTRA_SHOW, show)
             manageSeasonActivityResultLauncher.launch(addSeasonIntent)
-        }
-    }
-
-    private fun initializeSeasonsList() {
-        for (index in 1..10) {
-            seasonsList.add(
-                Season(
-                    index.toLong(),
-                    index,
-                    2000 + index,
-                    index,
-                    show
-                )
-            )
         }
     }
 
@@ -110,6 +102,7 @@ class SeasonActivity : AppCompatActivity(), OnSeasonClickListener {
                 with(AlertDialog.Builder(this)) {
                     setMessage("Confirma remoção?")
                     setPositiveButton("Sim") { _, _ ->
+                        seasonController.deleteSeason(season.seasonId!!)
                         seasonsList.removeAt(position)
                         seasonsRvAdapter.notifyDataSetChanged()
                         Snackbar.make(activitySeasonBinding.root, "Temporada removída!", Snackbar.LENGTH_SHORT).show()

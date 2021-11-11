@@ -8,9 +8,9 @@ import br.edu.ifsp.scl.ads.pdm.seriesmanager.repository.sqlite.dao.SqliteEpisode
 class EpisodeController(episodeActivity: EpisodeActivity) {
     private val episodeDAO: EpisodeDAO = SqliteEpisodeDAO(episodeActivity)
 
-    fun insertEpisode(episode: Episode) = episodeDAO.create(episode)
-    fun findOneEpisode(episodeId: Long) = episodeDAO.findOne(episodeId)
-    fun findAllEpisodes() = episodeDAO.findAll()
-    fun updateEpisode(episode: Episode) = episodeDAO.update(episode)
-    fun deleteEpisode(episodeId: Long) = episodeDAO.delete(episodeId)
+    fun insertEpisode(episode: Episode) = episodeDAO.createEpisode(episode)
+    fun findOneEpisode(episodeId: Long) = episodeDAO.findOneEpisode(episodeId)
+    fun findAllEpisodesOfSeason(seasonId: Long) = episodeDAO.findAllEpisodesOfSeason(seasonId)
+    fun updateEpisode(episode: Episode) = episodeDAO.updateEpisode(episode)
+    fun deleteEpisode(episodeId: Long) = episodeDAO.deleteEpisode(episodeId)
 }
