@@ -41,12 +41,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <EditText
-        android:id="@+id/seasonNumOfEpisodesEt"
+    <TextView
+        android:id="@+id/seasonNumberOfEpisodesEt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Quantidade de episódios"
+        android:padding="5dp"
+        android:text="Quantidade de episódios"
+        android:inputType="number"
         app:layout_constraintTop_toBottomOf="@id/seasonReleasedYearEt"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -56,7 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Salvar"
-        app:layout_constraintTop_toBottomOf="@id/seasonNumOfEpisodesEt"
+        app:layout_constraintTop_toBottomOf="@id/seasonNumberOfEpisodesEt"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

@@ -40,6 +40,7 @@
         android:layout_height="wrap_content"
         android:padding="2dp"
         android:text="Nome do episódio"
+        android:textAlignment="center"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/watchedEpisodeCb"

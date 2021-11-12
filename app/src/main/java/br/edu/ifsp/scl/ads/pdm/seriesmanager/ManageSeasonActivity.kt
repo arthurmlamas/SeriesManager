@@ -27,6 +27,7 @@ class ManageSeasonActivity : AppCompatActivity() {
             show = this
             activityManageSeasonBinding.showNameTv.text = this.title
         }
+        activityManageSeasonBinding.seasonNumberOfEpisodesEt.visibility = View.GONE
         seasonPosition = intent.getIntExtra(SeasonActivity.EXTRA_SEASON_POSITION, -1)
         intent.getParcelableExtra<Season>(SeasonActivity.EXTRA_SEASON)?.apply {
             this@ManageSeasonActivity.seasonId = this.seasonId!!
@@ -34,7 +35,8 @@ class ManageSeasonActivity : AppCompatActivity() {
                 showNameTv.text = this@apply.show.title
                 seasonNumberEt.setText(this@apply.seasonNumber.toString())
                 seasonReleasedYearEt.setText(this@apply.releasedYear.toString())
-                seasonNumOfEpisodesEt.setText(this@apply.numOfEpisodes.toString())
+                seasonNumberOfEpisodesEt.visibility = View.VISIBLE
+                seasonNumberOfEpisodesEt.text = "${this@apply.numOfEpisodes} episódio(s)"
                 if (seasonPosition == -1) {
                     for (i in 0 until (root.childCount - 1)) {
                         root.getChildAt(i).isEnabled = false
@@ -51,7 +53,7 @@ class ManageSeasonActivity : AppCompatActivity() {
                     seasonId,
                     this.seasonNumberEt.text.toString().toInt(),
                     this.seasonReleasedYearEt.text.toString().toInt(),
-                    this.seasonNumOfEpisodesEt.text.toString().toInt(),
+                    0,
                     show
                 )
             }

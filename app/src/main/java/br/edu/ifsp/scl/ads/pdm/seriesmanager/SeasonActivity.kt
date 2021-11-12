@@ -60,8 +60,9 @@ class SeasonActivity : AppCompatActivity(), OnSeasonClickListener {
         manageSeasonActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.getParcelableExtra<Season>(EXTRA_SEASON)?.apply {
-                    seasonController.insertSeason(this)
-                    seasonsList.add(this)
+                    val newSeasonId = seasonController.insertSeason(this)
+                    val newSeason = seasonController.findOneSeason(newSeasonId)
+                    seasonsList.add(newSeason)
                     seasonsRvAdapter.notifyDataSetChanged()
                 }
             }

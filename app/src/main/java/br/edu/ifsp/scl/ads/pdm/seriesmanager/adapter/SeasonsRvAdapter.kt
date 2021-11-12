@@ -43,7 +43,7 @@ class SeasonsRvAdapter(
         with(holder) {
             "${season.seasonNumber}ª Temporada".also { seasonNumberTv.text = it }
             seasonReleasedYearTv.text = season.releasedYear.toString()
-            "${season.numOfEpisodes} episódios".also { seasonNumOfEpisodesTv.text = it }
+            "${season.numOfEpisodes} episódio(s)".also { seasonNumOfEpisodesTv.text = it }
             itemView.setOnClickListener {
                 onSeasonClickListener.onSeasonClick(position)
             }

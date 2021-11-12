@@ -19,7 +19,7 @@ class SqliteSeasonDAO(context: Context): SeasonDAO {
             true,
             DatabaseBuilder.TABLE_SEASON,
             null,
-            "${DatabaseBuilder.EPISODE_COLUMN_ID} = ?",
+            "${DatabaseBuilder.SEASON_COLUMN_ID} = ?",
             arrayOf(seasonId.toString()),
             null,
             null,
@@ -28,9 +28,10 @@ class SqliteSeasonDAO(context: Context): SeasonDAO {
         )
 
         with(seasonCursor) {
-            val numOfEpisodes = findAllEpisodesOfSeason(getLong(getColumnIndexOrThrow(DatabaseBuilder.SEASON_COLUMN_ID))).count()
-            val show = findOneShow(getString(getColumnIndexOrThrow(DatabaseBuilder.SEASON_COLUMN_SHOW_ID)))
+            var show = Show()
             return if (seasonCursor.moveToFirst()) {
+                val numOfEpisodes = findAllEpisodesOfSeason(getLong(getColumnIndexOrThrow(DatabaseBuilder.SEASON_COLUMN_ID))).count()
+                show = findOneShow(getString(getColumnIndexOrThrow(DatabaseBuilder.SEASON_COLUMN_SHOW_ID)))
                 Season(
                     getLong(getColumnIndexOrThrow(DatabaseBuilder.SEASON_COLUMN_ID)),
                     getInt(getColumnIndexOrThrow(DatabaseBuilder.SEASON_COLUMN_SEASON_NUMBER)),
