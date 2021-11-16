@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity(), OnShowClickListener {
                         showController.deleteShow(show.title)
                         seriesList.removeAt(position)
                         seriesRvAdapter.notifyDataSetChanged()
-                        Snackbar.make(activityMainBinding.root, "Série removída!", Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(activityMainBinding.root, "Série removida!", Snackbar.LENGTH_SHORT).show()
                     }
                     setNegativeButton("Não") { _, _ ->
                         Snackbar.make(activityMainBinding.root, "Remoção cancelada!", Snackbar.LENGTH_SHORT).show()

@@ -15,6 +15,8 @@ class SqliteSeasonDAO(context: Context): SeasonDAO {
     override fun createSeason(season: Season) = db.insert(DatabaseBuilder.TABLE_SEASON, null, convertSeasonToContentValues(season))
 
     override fun findOneSeason(seasonId: Long): Season {
+        val numOfEpisodes = db.rawQuery("SELECT count(*) FROM ${DatabaseBuilder.TABLE_EPISODE} WHERE ${DatabaseBuilder.EPISODE_COLUMN_SEASON_ID} = ?;", arrayOf(seasonId.toString())).count
+
         val seasonCursor = db.query(
             true,
             DatabaseBuilder.TABLE_SEASON,
@@ -30,7 +32,6 @@ class SqliteSeasonDAO(context: Context): SeasonDAO {
         with(seasonCursor) {
             var show = Show()
             return if (seasonCursor.moveToFirst()) {
-                val numOfEpisodes = findAllEpisodesOfSeason(getLong(getColumnIndexOrThrow(DatabaseBuilder.SEASON_COLUMN_ID))).count()
                 show = findOneShow(getString(getColumnIndexOrThrow(DatabaseBuilder.SEASON_COLUMN_SHOW_ID)))
                 Season(
                     getLong(getColumnIndexOrThrow(DatabaseBuilder.SEASON_COLUMN_ID)),
@@ -124,6 +125,7 @@ class SqliteSeasonDAO(context: Context): SeasonDAO {
     }
 
     private fun findAllEpisodesOfSeason(seasonId: Long): MutableList<Episode> {
+        val season = findOneSeason(seasonId)
         val episodesList: MutableList<Episode> = mutableListOf()
 
         val episodeCursor = db.query(
@@ -147,7 +149,7 @@ class SqliteSeasonDAO(context: Context): SeasonDAO {
                         getString(getColumnIndexOrThrow(DatabaseBuilder.EPISODE_COLUMN_NAME)),
                         getInt(getColumnIndexOrThrow(DatabaseBuilder.EPISODE_COLUMN_DURATION)),
                         getInt(getColumnIndexOrThrow(DatabaseBuilder.EPISODE_COLUMN_WATCHED)).toBoolean(),
-                        findOneSeason(seasonId)
+                        season
                     )
                 )
             }
@@ -156,5 +158,5 @@ class SqliteSeasonDAO(context: Context): SeasonDAO {
         return episodesList
     }
 
-    private fun Int.toBoolean() :Boolean = this == 1
+    private fun Int.toBoolean(): Boolean = this == 1
 }

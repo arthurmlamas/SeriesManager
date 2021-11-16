@@ -56,12 +56,14 @@ class EpisodeActivity : AppCompatActivity(), OnEpisodeClickListener {
             "${this.seasonNumber}ª Temporada".also { activityEpisodeBinding.seasonNumberTv.text = it }
         }
 
-        initializeEpisodesList()
+        episodesList.addAll(episodeController.findAllEpisodesOfSeason(season.seasonId!!))
 
         manageEpisodeActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.getParcelableExtra<Episode>(EXTRA_EPISODE)?.apply {
-                    episodesList.add(this)
+                    episodeController.insertEpisode(this)
+                    episodesList.clear()
+                    episodesList.addAll(episodeController.findAllEpisodesOfSeason(season.seasonId!!))
                     episodesRvAdapter.notifyDataSetChanged()
                 }
             }
@@ -72,6 +74,7 @@ class EpisodeActivity : AppCompatActivity(), OnEpisodeClickListener {
                 val position = result.data?.getIntExtra(EXTRA_EPISODE_POSITION, -1)
                 result.data?.getParcelableExtra<Episode>(EXTRA_EPISODE)?.apply {
                     if (position != null && position != -1) {
+                        episodeController.updateEpisode(this)
                         episodesList[position] = this
                         episodesRvAdapter.notifyDataSetChanged()
                     }
@@ -84,20 +87,6 @@ class EpisodeActivity : AppCompatActivity(), OnEpisodeClickListener {
             addEpisodeIntent.putExtra(SeasonActivity.EXTRA_SEASON, season)
             manageEpisodeActivityResultLauncher.launch(addEpisodeIntent)
         }
-    }
-
-    private fun initializeEpisodesList() {
-        for (index in 1..10)
-            episodesList.add(
-                Episode(
-                    index.toLong(),
-                    index,
-                    "Criando E${index}",
-                    index + 100,
-                    false,
-                    season
-                )
-            )
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
@@ -115,9 +104,10 @@ class EpisodeActivity : AppCompatActivity(), OnEpisodeClickListener {
                 with(AlertDialog.Builder(this)) {
                     setMessage("Confirma remoção?")
                     setPositiveButton("Sim") { _, _ ->
+                        episodeController.deleteEpisode(episode.episodeId!!)
                         episodesList.removeAt(position)
                         episodesRvAdapter.notifyDataSetChanged()
-                        Snackbar.make(activityEpisodeBinding.root, "Episódio removído!", Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(activityEpisodeBinding.root, "Episódio removido!", Snackbar.LENGTH_SHORT).show()
                     }
                     setNegativeButton("Não") { _, _ ->
                         Snackbar.make(activityEpisodeBinding.root, "Remoção cancelada!", Snackbar.LENGTH_SHORT).show()
@@ -135,5 +125,10 @@ class EpisodeActivity : AppCompatActivity(), OnEpisodeClickListener {
         val displayEpisodeIntent = Intent(this, ManageEpisodeActivity::class.java)
         displayEpisodeIntent.putExtra(EXTRA_EPISODE, episode)
         manageEpisodeActivityResultLauncher.launch(displayEpisodeIntent)
+    }
+
+    override fun onEpisodeCheckBoxClick(position: Int) {
+        val episode = episodesList[position]
+        episodeController.updateEpisode(episode)
     }
 }

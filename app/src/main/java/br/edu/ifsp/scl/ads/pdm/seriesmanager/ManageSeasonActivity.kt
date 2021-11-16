@@ -36,7 +36,7 @@ class ManageSeasonActivity : AppCompatActivity() {
                 seasonNumberEt.setText(this@apply.seasonNumber.toString())
                 seasonReleasedYearEt.setText(this@apply.releasedYear.toString())
                 seasonNumberOfEpisodesEt.visibility = View.VISIBLE
-                seasonNumberOfEpisodesEt.text = "${this@apply.numOfEpisodes} episódio(s)"
+                "${this@apply.numOfEpisodes} episódio(s)".also { seasonNumberOfEpisodesEt.text = it }
                 if (seasonPosition == -1) {
                     for (i in 0 until (root.childCount - 1)) {
                         root.getChildAt(i).isEnabled = false
@@ -66,6 +66,5 @@ class ManageSeasonActivity : AppCompatActivity() {
             setResult(RESULT_OK, resultIntent)
             finish()
         }
-
     }
 }

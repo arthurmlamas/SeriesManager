@@ -44,7 +44,7 @@ class DatabaseBuilder(context: Context) {
         const val EPISODE_COLUMN_EPISODE_NUMBER = "numero_sequencial"
         const val EPISODE_COLUMN_NAME = "nome"
         const val EPISODE_COLUMN_DURATION = "duracao"
-        const val EPISODE_COLUMN_WATCHED = "assitido"
+        const val EPISODE_COLUMN_WATCHED = "assistido"
         const val EPISODE_COLUMN_SEASON_ID = "temporada_id"
 
         const val CREATE_TABLE_EPISODIO_STMT = "CREATE TABLE IF NOT EXISTS $TABLE_EPISODE (" +

@@ -13,6 +13,7 @@ class ManageEpisodeActivity : AppCompatActivity() {
 
     private lateinit var episode: Episode
     private lateinit var season: Season
+    private var episodeId: Long? = null
 
     private val activityManageEpisodeBinding: ActivityManageEpisodeBinding by lazy {
         ActivityManageEpisodeBinding.inflate(layoutInflater)
@@ -29,6 +30,7 @@ class ManageEpisodeActivity : AppCompatActivity() {
         }
         episodePosition = intent.getIntExtra(EpisodeActivity.EXTRA_EPISODE_POSITION, -1)
         intent.getParcelableExtra<Episode>(EpisodeActivity.EXTRA_EPISODE)?.apply {
+            this@ManageEpisodeActivity.episodeId = this.episodeId
             with(activityManageEpisodeBinding) {
                 showNameTv.text = this@apply.season.show.title
                 "${this@apply.season.seasonNumber}ª Temporada".also { seasonNumberTv.text = it }
@@ -49,7 +51,7 @@ class ManageEpisodeActivity : AppCompatActivity() {
         activityManageEpisodeBinding.saveBt.setOnClickListener {
             with(activityManageEpisodeBinding) {
                 episode = Episode(
-                    null,
+                    episodeId,
                     this.episodeNumberEt.text.toString().toInt(),
                     this.episodeTitleEt.text.toString(),
                     this.durationEt.text.toString().toInt(),

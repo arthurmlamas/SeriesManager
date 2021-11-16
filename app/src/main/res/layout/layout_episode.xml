@@ -32,10 +32,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/episodeNumberTv"
         app:layout_constraintEnd_toStartOf="@id/watchedEpisodeCb"
-        app:layout_constraintBottom_toTopOf="@id/episodeTitlteTv" />
+        app:layout_constraintBottom_toTopOf="@id/episodeTitleTv" />
 
     <TextView
-        android:id="@+id/episodeTitlteTv"
+        android:id="@+id/episodeTitleTv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:padding="2dp"
@@ -52,7 +52,7 @@
         android:id="@+id/watchedEpisodeCb"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Assitido"
+        android:text="Assistido"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/durationTv"
         app:layout_constraintEnd_toEndOf="parent"/>

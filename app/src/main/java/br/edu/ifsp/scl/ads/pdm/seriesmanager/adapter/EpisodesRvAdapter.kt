@@ -18,7 +18,7 @@ class EpisodesRvAdapter(
     inner class EpisodeLayoutHolder(layoutEpisodeBinding: LayoutEpisodeBinding): RecyclerView.ViewHolder(
         layoutEpisodeBinding.root), View.OnCreateContextMenuListener {
         val episodeNumberTv: TextView = layoutEpisodeBinding.episodeNumberTv
-        val episodeTitlteTv: TextView = layoutEpisodeBinding.episodeTitlteTv
+        val episodeTitleTv: TextView = layoutEpisodeBinding.episodeTitleTv
         val durationTv: TextView = layoutEpisodeBinding.durationTv
         val watchedEpisodeCb: CheckBox = layoutEpisodeBinding.watchedEpisodeCb
         init {
@@ -45,10 +45,11 @@ class EpisodesRvAdapter(
         with(holder) {
             "Episódio ${episode.episodeNumber}".also { episodeNumberTv.text = it }
             "${episode.duration} min".also { durationTv.text = it }
-            episodeTitlteTv.text = episode.title
+            episodeTitleTv.text = episode.title
             watchedEpisodeCb.isChecked = episode.watchedFlag
             watchedEpisodeCb.setOnClickListener { it as CheckBox
                 episode.watchedFlag = it.isChecked
+                onEpisodeClickListener.onEpisodeCheckBoxClick(position)
             }
             itemView.setOnClickListener {
                 onEpisodeClickListener.onEpisodeClick(position)

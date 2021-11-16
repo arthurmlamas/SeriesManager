@@ -21,7 +21,7 @@
         android:clickable="true"
         android:focusable="true"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_add_objetc"
+        android:src="@drawable/ic_add_object"
         android:contentDescription="Adicionar série"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />

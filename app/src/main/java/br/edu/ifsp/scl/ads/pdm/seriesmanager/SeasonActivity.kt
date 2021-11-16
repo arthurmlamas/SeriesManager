@@ -60,9 +60,9 @@ class SeasonActivity : AppCompatActivity(), OnSeasonClickListener {
         manageSeasonActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.getParcelableExtra<Season>(EXTRA_SEASON)?.apply {
-                    val newSeasonId = seasonController.insertSeason(this)
-                    val newSeason = seasonController.findOneSeason(newSeasonId)
-                    seasonsList.add(newSeason)
+                    seasonController.insertSeason(this)
+                    seasonsList.clear()
+                    seasonsList.addAll(seasonController.findAllSeasonsOfShow(show.title))
                     seasonsRvAdapter.notifyDataSetChanged()
                 }
             }
@@ -106,7 +106,7 @@ class SeasonActivity : AppCompatActivity(), OnSeasonClickListener {
                         seasonController.deleteSeason(season.seasonId!!)
                         seasonsList.removeAt(position)
                         seasonsRvAdapter.notifyDataSetChanged()
-                        Snackbar.make(activitySeasonBinding.root, "Temporada removída!", Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(activitySeasonBinding.root, "Temporada removida!", Snackbar.LENGTH_SHORT).show()
                     }
                     setNegativeButton("Não") { _, _ ->
                         Snackbar.make(activitySeasonBinding.root, "Remoção cancelada!", Snackbar.LENGTH_SHORT).show()
@@ -124,5 +124,12 @@ class SeasonActivity : AppCompatActivity(), OnSeasonClickListener {
         val displaySeasonIntent = Intent(this, EpisodeActivity::class.java)
         displaySeasonIntent.putExtra(EXTRA_SEASON, season)
         manageSeasonActivityResultLauncher.launch(displaySeasonIntent)
+    }
+
+    override fun onRestart() {
+        seasonsList.clear()
+        seasonsList.addAll(seasonController.findAllSeasonsOfShow(show.title))
+        seasonsRvAdapter.notifyDataSetChanged()
+        super.onRestart()
     }
 }
