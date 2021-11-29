@@ -11,6 +11,7 @@ import br.edu.ifsp.scl.ads.pdm.seriesmanager.repository.sqlite.utils.DatabaseBui
 
 class SqliteEpisodeDAO(context: Context): EpisodeDAO {
     private val db: SQLiteDatabase = DatabaseBuilder(context).getDB()
+    private val sqliteSeasonDAO: SqliteSeasonDAO = SqliteSeasonDAO(context)
 
     override fun createEpisode(episode: Episode): Long = db.insert(DatabaseBuilder.TABLE_EPISODE, null, convertEpisodeToContentValues(episode))
 
@@ -30,7 +31,7 @@ class SqliteEpisodeDAO(context: Context): EpisodeDAO {
         with(episodeCursor) {
             var season = Season(0, 0,0, 0 , Show())
             return if (episodeCursor.moveToFirst()) {
-                season = findOneSeason(getLong(getColumnIndexOrThrow(DatabaseBuilder.EPISODE_COLUMN_ID)))
+                season = sqliteSeasonDAO.findOneSeason(getLong(getColumnIndexOrThrow(DatabaseBuilder.EPISODE_COLUMN_ID)))
                 Episode(
                     getLong(getColumnIndexOrThrow(DatabaseBuilder.EPISODE_COLUMN_ID)),
                     getInt(getColumnIndexOrThrow(DatabaseBuilder.EPISODE_COLUMN_EPISODE_NUMBER)),
@@ -69,7 +70,7 @@ class SqliteEpisodeDAO(context: Context): EpisodeDAO {
                         getString(getColumnIndexOrThrow(DatabaseBuilder.EPISODE_COLUMN_NAME)),
                         getInt(getColumnIndexOrThrow(DatabaseBuilder.EPISODE_COLUMN_DURATION)),
                         getInt(getColumnIndexOrThrow(DatabaseBuilder.EPISODE_COLUMN_WATCHED)).toBoolean(),
-                        findOneSeason(seasonId)
+                        sqliteSeasonDAO.findOneSeason(seasonId)
                     )
                 )
             }
@@ -103,60 +104,4 @@ class SqliteEpisodeDAO(context: Context): EpisodeDAO {
     }
 
     private fun Int.toBoolean(): Boolean = this == 1
-
-    private fun findOneSeason(seasonId: Long): Season {
-        val seasonCursor = db.query(
-            true,
-            DatabaseBuilder.TABLE_SEASON,
-            null,
-            "${DatabaseBuilder.SEASON_COLUMN_ID} = ?",
-            arrayOf(seasonId.toString()),
-            null,
-            null,
-            null,
-            null
-        )
-
-        with(seasonCursor) {
-            val numOfEpisodes = db.rawQuery("SELECT count(*) FROM ${DatabaseBuilder.TABLE_EPISODE} WHERE ${DatabaseBuilder.EPISODE_COLUMN_SEASON_ID} = ?;", arrayOf(seasonId.toString())).count
-            return if (seasonCursor.moveToFirst()) {
-                val show = findOneShow(getString(getColumnIndexOrThrow(DatabaseBuilder.SEASON_COLUMN_SHOW_ID)))
-                Season(
-                    getLong(getColumnIndexOrThrow(DatabaseBuilder.SEASON_COLUMN_ID)),
-                    getInt(getColumnIndexOrThrow(DatabaseBuilder.SEASON_COLUMN_SEASON_NUMBER)),
-                    getInt(getColumnIndexOrThrow(DatabaseBuilder.SEASON_COLUMN_RELEASED_YEAR)),
-                    numOfEpisodes,
-                    show
-                )
-            }
-            else { Season(0, 0, 0, 0, Show())
-            }
-        }
-    }
-
-    private fun findOneShow(title: String): Show {
-        val showCursor = db.query(
-            true,
-            DatabaseBuilder.TABLE_SHOW,
-            null,
-            "${DatabaseBuilder.SHOW_COLUMN_NAME} = ?",
-            arrayOf(title),
-            null,
-            null,
-            null,
-            null
-        )
-
-        return if (showCursor.moveToFirst()) {
-            with(showCursor) {
-                Show(
-                    getString(getColumnIndexOrThrow(DatabaseBuilder.SHOW_COLUMN_NAME)),
-                    getInt(getColumnIndexOrThrow(DatabaseBuilder.SHOW_COLUMN_RELEASED_YEAR)),
-                    getString(getColumnIndexOrThrow(DatabaseBuilder.SHOW_COLUMN_BROADCASTER)),
-                    getString(getColumnIndexOrThrow(DatabaseBuilder.SHOW_COLUMN_GENRE))
-                )
-            }
-        }
-        else { Show() }
-    }
 }
