@@ -2,6 +2,7 @@ package br.edu.ifsp.scl.ads.pdm.seriesmanager
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -75,6 +76,19 @@ class MainActivity : AppCompatActivity(), OnShowClickListener {
         activityMainBinding.addShowFab.setOnClickListener {
             manageShowActivityResultLauncher.launch(Intent(this, ManageShowActivity::class.java))
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_refresh, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when(item.itemId) {
+        R.id.refreshMi -> {
+            seriesRvAdapter.notifyDataSetChanged()
+            true
+        }
+        else -> { false }
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {

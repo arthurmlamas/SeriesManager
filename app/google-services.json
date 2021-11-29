@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1074001826753",
+    "firebase_url": "https://seriesmanagerfirebase-bf9c3-default-rtdb.firebaseio.com",
+    "project_id": "seriesmanagerfirebase-bf9c3",
+    "storage_bucket": "seriesmanagerfirebase-bf9c3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1074001826753:android:5d9c038b58411bec101540",
+        "android_client_info": {
+          "package_name": "br.edu.ifsp.scl.ads.pdm.seriesmanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1074001826753-bkn34j9ge3uann7ngscor6fddenrphml.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.edu.ifsp.scl.ads.pdm.seriesmanager",
+            "certificate_hash": "d2dc1851db014f9c39945607e13f3a9d4df3e1b3"
+          }
+        },
+        {
+          "client_id": "1074001826753-etq234ku6638mmqtfrbb06t3m122mkv7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvwr4sI_h1ZYoaL7uF94m0ntkTERCuCnM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1074001826753-etq234ku6638mmqtfrbb06t3m122mkv7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
