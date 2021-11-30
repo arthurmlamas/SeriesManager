@@ -12,7 +12,7 @@ import com.google.firebase.ktx.Firebase
 
 class FirebaseShowDAO : ShowDAO {
     companion object {
-        private const val BD_SERIES_MANAGER = "series_manager"
+        private const val BD_SERIES_MANAGER = "series"
     }
 
     private val seriesManagerRtDb = Firebase.database.getReference(BD_SERIES_MANAGER)
@@ -37,7 +37,7 @@ class FirebaseShowDAO : ShowDAO {
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
-                val removedShow: Show? = snapshot as? Show
+                val removedShow: Show? = snapshot.value as? Show
                 removedShow?.apply {
                     seriesList.remove(this)
                 }

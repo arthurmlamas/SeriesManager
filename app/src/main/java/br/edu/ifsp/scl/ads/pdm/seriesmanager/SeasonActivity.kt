@@ -3,6 +3,7 @@ package br.edu.ifsp.scl.ads.pdm.seriesmanager
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -32,7 +33,9 @@ class SeasonActivity : AppCompatActivity(), OnSeasonClickListener {
     private lateinit var manageSeasonActivityResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var updateSeasonActivityResultLauncher: ActivityResultLauncher<Intent>
 
-    private val seasonsList: MutableList<Season> = mutableListOf()
+    private val seasonsList: MutableList<Season> by lazy {
+        seasonController.findAllSeasonsOfShow(show.title)
+    }
     private val seasonController: SeasonController by lazy {
         SeasonController(this)
     }
@@ -47,22 +50,18 @@ class SeasonActivity : AppCompatActivity(), OnSeasonClickListener {
         super.onCreate(savedInstanceState)
         setContentView(activitySeasonBinding.root)
 
-        activitySeasonBinding.seasonsRv.adapter = seasonsRvAdapter
-        activitySeasonBinding.seasonsRv.layoutManager = seasonsLayoutManager
-
         intent.getParcelableExtra<Show>(MainActivity.EXTRA_SHOW)?.run {
             show = this
             activitySeasonBinding.showNameTv.text = this.title
         }
-
-        seasonsList.addAll(seasonController.findAllSeasonsOfShow(show.title))
+        activitySeasonBinding.seasonsRv.adapter = seasonsRvAdapter
+        activitySeasonBinding.seasonsRv.layoutManager = seasonsLayoutManager
 
         manageSeasonActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.getParcelableExtra<Season>(EXTRA_SEASON)?.apply {
                     seasonController.insertSeason(this)
-                    seasonsList.clear()
-                    seasonsList.addAll(seasonController.findAllSeasonsOfShow(show.title))
+                    seasonsList.add(this)
                     seasonsRvAdapter.notifyDataSetChanged()
                 }
             }
@@ -86,6 +85,22 @@ class SeasonActivity : AppCompatActivity(), OnSeasonClickListener {
             addSeasonIntent.putExtra(MainActivity.EXTRA_SHOW, show)
             manageSeasonActivityResultLauncher.launch(addSeasonIntent)
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_refresh, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when(item.itemId) {
+        R.id.refreshMi -> {
+            seasonsList.clear()
+            seasonsList.addAll(seasonController.findAllSeasonsOfShow(show.title))
+            seasonsRvAdapter.notifyDataSetChanged()
+
+            true
+        }
+        else -> { false }
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
@@ -124,12 +139,5 @@ class SeasonActivity : AppCompatActivity(), OnSeasonClickListener {
         val displaySeasonIntent = Intent(this, EpisodeActivity::class.java)
         displaySeasonIntent.putExtra(EXTRA_SEASON, season)
         manageSeasonActivityResultLauncher.launch(displaySeasonIntent)
-    }
-
-    override fun onRestart() {
-        seasonsList.clear()
-        seasonsList.addAll(seasonController.findAllSeasonsOfShow(show.title))
-        seasonsRvAdapter.notifyDataSetChanged()
-        super.onRestart()
     }
 }
