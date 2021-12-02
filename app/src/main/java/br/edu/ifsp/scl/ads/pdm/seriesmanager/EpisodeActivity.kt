@@ -15,6 +15,7 @@ import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivityEpisodeBinding
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.episode.Episode
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.season.Season
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.onClickListeners.OnEpisodeClickListener
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.repository.firebase.utils.AuthenticationFirebase
 import com.google.android.material.snackbar.Snackbar
 
 class EpisodeActivity : AppCompatActivity(), OnEpisodeClickListener {
@@ -90,14 +91,18 @@ class EpisodeActivity : AppCompatActivity(), OnEpisodeClickListener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_refresh, menu)
+        menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when(item.itemId) {
         R.id.refreshMi -> {
             episodesRvAdapter.notifyDataSetChanged()
-
+            true
+        }
+        R.id.logoutMi -> {
+            AuthenticationFirebase.firebaseAuth.signOut()
+            finish()
             true
         }
         else -> { false }
@@ -144,5 +149,12 @@ class EpisodeActivity : AppCompatActivity(), OnEpisodeClickListener {
     override fun onEpisodeCheckBoxClick(position: Int) {
         val episode = episodesList[position]
         episodeController.updateEpisode(episode)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (AuthenticationFirebase.firebaseAuth.currentUser == null) {
+            finish()
+        }
     }
 }

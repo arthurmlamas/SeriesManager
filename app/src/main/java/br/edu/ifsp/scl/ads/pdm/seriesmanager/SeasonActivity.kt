@@ -15,6 +15,7 @@ import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivitySeasonBinding
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.season.Season
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.show.Show
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.onClickListeners.OnSeasonClickListener
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.repository.firebase.utils.AuthenticationFirebase
 import com.google.android.material.snackbar.Snackbar
 
 class SeasonActivity : AppCompatActivity(), OnSeasonClickListener {
@@ -89,13 +90,18 @@ class SeasonActivity : AppCompatActivity(), OnSeasonClickListener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_refresh, menu)
+        menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when(item.itemId) {
         R.id.refreshMi -> {
             seasonsRvAdapter.notifyDataSetChanged()
+            true
+        }
+        R.id.logoutMi -> {
+            AuthenticationFirebase.firebaseAuth.signOut()
+            finish()
             true
         }
         else -> { false }
@@ -139,8 +145,10 @@ class SeasonActivity : AppCompatActivity(), OnSeasonClickListener {
         manageSeasonActivityResultLauncher.launch(displaySeasonIntent)
     }
 
-    override fun onRestart() {
-        seasonsRvAdapter.notifyDataSetChanged()
-        super.onRestart()
+    override fun onStart() {
+        super.onStart()
+        if (AuthenticationFirebase.firebaseAuth.currentUser == null) {
+            finish()
+        }
     }
 }

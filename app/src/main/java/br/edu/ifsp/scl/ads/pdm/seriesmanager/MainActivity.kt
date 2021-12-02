@@ -14,6 +14,7 @@ import br.edu.ifsp.scl.ads.pdm.seriesmanager.controller.ShowController
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivityMainBinding
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.show.Show
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.onClickListeners.OnShowClickListener
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.repository.firebase.utils.AuthenticationFirebase
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity(), OnShowClickListener {
@@ -79,13 +80,18 @@ class MainActivity : AppCompatActivity(), OnShowClickListener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_refresh, menu)
+        menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when(item.itemId) {
         R.id.refreshMi -> {
             seriesRvAdapter.notifyDataSetChanged()
+            true
+        }
+        R.id.logoutMi -> {
+            AuthenticationFirebase.firebaseAuth.signOut()
+            finish()
             true
         }
         else -> { false }
@@ -127,5 +133,12 @@ class MainActivity : AppCompatActivity(), OnShowClickListener {
         val displayShowIntent = Intent(this, SeasonActivity::class.java)
         displayShowIntent.putExtra(EXTRA_SHOW, show)
         manageShowActivityResultLauncher.launch(displayShowIntent)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (AuthenticationFirebase.firebaseAuth.currentUser == null) {
+            finish()
+        }
     }
 }

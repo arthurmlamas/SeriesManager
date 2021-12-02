@@ -6,4 +6,10 @@
         android:title="Atualizar"
         android:icon="@drawable/ic_refresh"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/logoutMi"
+        android:title="Sair"
+        android:icon="@drawable/ic_logout"
+        app:showAsAction="always" />
 </menu>
