@@ -1,4 +1,4 @@
-package br.edu.ifsp.scl.ads.pdm.seriesmanager
+package br.edu.ifsp.scl.ads.pdm.seriesmanager.activitiy
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +9,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.R
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.adapter.SeasonsRvAdapter
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.controller.SeasonController
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivitySeasonBinding

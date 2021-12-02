@@ -1,4 +1,4 @@
-package br.edu.ifsp.scl.ads.pdm.seriesmanager
+package br.edu.ifsp.scl.ads.pdm.seriesmanager.activitiy
 
 import android.R
 import android.content.Intent
