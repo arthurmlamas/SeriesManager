@@ -6,10 +6,10 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Episode (
-    val episodeId: Long? = 0,
+    var episodeId: Long? = 0,
     val episodeNumber: Int = 0,
     val title: String = "",
     val duration: Int = 0,
     var watchedFlag: Boolean = false,
-    val season: Season
+    val season: Season = Season()
 ): Parcelable

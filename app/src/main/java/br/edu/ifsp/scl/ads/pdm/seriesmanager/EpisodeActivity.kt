@@ -3,6 +3,7 @@ package br.edu.ifsp.scl.ads.pdm.seriesmanager
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -32,7 +33,9 @@ class EpisodeActivity : AppCompatActivity(), OnEpisodeClickListener {
     private lateinit var manageEpisodeActivityResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var updateEpisodeActivityResultLauncher: ActivityResultLauncher<Intent>
 
-    private val episodesList: MutableList<Episode> = mutableListOf()
+    private val episodesList: MutableList<Episode> by lazy {
+        episodeController.findAllEpisodesOfSeason(season.seasonId!!)
+    }
     private val episodeController: EpisodeController by lazy {
         EpisodeController(this)
     }
@@ -47,23 +50,20 @@ class EpisodeActivity : AppCompatActivity(), OnEpisodeClickListener {
         super.onCreate(savedInstanceState)
         setContentView(activityEpisodeBinding.root)
 
-        activityEpisodeBinding.episodesRv.adapter = episodesRvAdapter
-        activityEpisodeBinding.episodesRv.layoutManager = episodesLayoutManager
-
         intent.getParcelableExtra<Season>(SeasonActivity.EXTRA_SEASON)?.run {
             season = this
             activityEpisodeBinding.showNameTv.text = this.show.title
             "${this.seasonNumber}ª Temporada".also { activityEpisodeBinding.seasonNumberTv.text = it }
         }
 
-        episodesList.addAll(episodeController.findAllEpisodesOfSeason(season.seasonId!!))
+        activityEpisodeBinding.episodesRv.adapter = episodesRvAdapter
+        activityEpisodeBinding.episodesRv.layoutManager = episodesLayoutManager
 
         manageEpisodeActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.getParcelableExtra<Episode>(EXTRA_EPISODE)?.apply {
                     episodeController.insertEpisode(this)
-                    episodesList.clear()
-                    episodesList.addAll(episodeController.findAllEpisodesOfSeason(season.seasonId!!))
+                    episodesList.add(this)
                     episodesRvAdapter.notifyDataSetChanged()
                 }
             }
@@ -87,6 +87,20 @@ class EpisodeActivity : AppCompatActivity(), OnEpisodeClickListener {
             addEpisodeIntent.putExtra(SeasonActivity.EXTRA_SEASON, season)
             manageEpisodeActivityResultLauncher.launch(addEpisodeIntent)
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_refresh, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when(item.itemId) {
+        R.id.refreshMi -> {
+            episodesRvAdapter.notifyDataSetChanged()
+
+            true
+        }
+        else -> { false }
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {

@@ -9,6 +9,6 @@ data class Season(
     var seasonId: Long? = 0,
     var seasonNumber: Int = 0,
     val releasedYear: Int = 0,
-    val numOfEpisodes: Int = 0,
+    var numOfEpisodes: Int = 0,
     val show: Show = Show()
 ): Parcelable

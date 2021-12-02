@@ -16,6 +16,7 @@ class FirebaseShowDAO : ShowDAO {
     }
 
     private val seriesManagerRtDb = Firebase.database.getReference(BD_SERIES_MANAGER)
+    private val seasonDAO: FirebaseSeasonDAO = FirebaseSeasonDAO()
 
     private val seriesList: MutableList<Show> = mutableListOf()
     init {
@@ -82,11 +83,20 @@ class FirebaseShowDAO : ShowDAO {
     }
 
     override fun deleteShow(title: String): Int {
+        deleteShowOnCascade(title)
         seriesManagerRtDb.child(title).removeValue()
         return 1
     }
 
     private fun createOrUpdateShow(show: Show) {
         seriesManagerRtDb.child(show.title).setValue(show)
+    }
+
+    private fun deleteShowOnCascade(title: String) {
+        seriesList.forEach { show ->
+            if (show.title == title) {
+                seasonDAO.deleteAllSeasonsOfShow(title)
+            }
+        }
     }
 }

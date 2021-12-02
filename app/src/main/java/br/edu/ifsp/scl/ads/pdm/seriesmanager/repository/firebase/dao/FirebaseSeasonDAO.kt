@@ -2,7 +2,6 @@ package br.edu.ifsp.scl.ads.pdm.seriesmanager.repository.firebase.dao
 
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.season.Season
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.season.SeasonDAO
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.show.Show
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -17,6 +16,8 @@ class FirebaseSeasonDAO : SeasonDAO {
     }
 
     private val seriesManagerRtDb = Firebase.database.getReference(BD_SERIES_MANAGER)
+    private var episodeDAO: FirebaseEpisodeDAO = FirebaseEpisodeDAO()
+    private var generatedSeasonId: Long = 0
 
     private val seasonsList: MutableList<Season> = mutableListOf()
     init {
@@ -57,10 +58,21 @@ class FirebaseSeasonDAO : SeasonDAO {
             override fun onDataChange(snapshot: DataSnapshot) {
                 seasonsList.clear()
                 snapshot.children.forEach {
-                    val season: Season = it.getValue<Season>()?: Season(0, 0, 0,0, Show())
+                    val season: Season = it.getValue<Season>()?: Season()
                     seasonsList.add(season)
                 }
-                seasonsList.sortBy { season -> season.seasonId }
+                generatedSeasonId = autoGenerateSeasonId()
+                seasonsList.forEach { season ->
+                    var numberOfEpisodesOfSeason = 0
+                    episodeDAO.episodesList.forEach { episode ->
+                        val comparedSeasonId = episode.season.seasonId!!
+                        if (season.seasonId!! == comparedSeasonId)  {
+                            numberOfEpisodesOfSeason = episode.season.numOfEpisodes
+                        }
+                        season.numOfEpisodes = numberOfEpisodesOfSeason
+                        updateSeason(season)
+                    }
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -70,21 +82,43 @@ class FirebaseSeasonDAO : SeasonDAO {
     }
 
     override fun createSeason(season: Season): Long {
-        createOrUpdateSeason(autoGenerateSeasonId(season))
+        season.seasonId = generatedSeasonId
+        createOrUpdateSeason(season)
         return 0L
     }
 
-    override fun findOneSeason(seasonId: Long): Season = seasonsList.firstOrNull { it.seasonId.toString() == seasonId.toString() } ?: Season(0,0,0,0, Show())
+    override fun findOneSeason(seasonId: Long): Season = seasonsList.firstOrNull { it.seasonId.toString() == seasonId.toString() } ?: Season()
 
     override fun findAllSeasonsOfShow(showTitle: String): MutableList<Season> {
-        val seasonsOfShowList: MutableList<Season> = mutableListOf()
-        seasonsList.forEach {
-            if (it.show.title == showTitle) {
-                seasonsOfShowList.add(it)
+        seriesManagerRtDb.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                seasonsList.clear()
+                snapshot.children.forEach {
+                    val season: Season = it.getValue<Season>()?: Season()
+                    if (season.show.title == showTitle) {
+                        seasonsList.add(season)
+                    }
+                }
+                seasonsList.forEach { season ->
+                    var numberOfEpisodesOfSeason = 0
+                    episodeDAO.episodesList.forEach { episode ->
+                        val comparedSeasonId = episode.season.seasonId!!
+                        if (season.seasonId!! == comparedSeasonId)  {
+                            numberOfEpisodesOfSeason = episode.season.numOfEpisodes
+                        }
+                        season.numOfEpisodes = numberOfEpisodesOfSeason
+                        updateSeason(season)
+                    }
+                }
+                seasonsList.sortBy { season -> season.seasonNumber }
             }
-        }
-        seasonsOfShowList.sortBy { season -> season.seasonNumber }
-        return seasonsOfShowList
+
+            override fun onCancelled(error: DatabaseError) {
+                // No needed
+            }
+        })
+
+        return seasonsList
     }
 
     override fun updateSeason(season: Season): Int {
@@ -93,6 +127,7 @@ class FirebaseSeasonDAO : SeasonDAO {
     }
 
     override fun deleteSeason(seasonId: Long): Int {
+        deleteSeasonOnCascade(seasonId)
         seriesManagerRtDb.child(seasonId.toString()).removeValue()
         return 1
     }
@@ -101,21 +136,29 @@ class FirebaseSeasonDAO : SeasonDAO {
         seriesManagerRtDb.child(season.seasonId.toString()).setValue(season)
     }
 
-    private fun autoGenerateSeasonId(season: Season): Season {
+    private fun autoGenerateSeasonId(): Long {
         var i = 0
         while (i < seasonsList.size) {
             if (seasonsList[i].seasonId!!.toInt() != i + 1) {
-                season.seasonId = i.toLong() + 1
-                break
+                return i.toLong() + 1
             }
             else {
                 i++
             }
         }
-        if (season.seasonId?.toInt() == null) {
-            season.seasonId = seasonsList.size.toLong() + 1
-        }
+        return seasonsList.size.toLong() + 1
+    }
 
-        return season
+    private fun deleteSeasonOnCascade(seasonId: Long) {
+        episodeDAO.deleteAllEpisodesOfSeason(seasonId)
+    }
+
+    fun deleteAllSeasonsOfShow(showTitle: String) {
+        seasonsList.forEach { season ->
+            if (season.show.title == showTitle) {
+                deleteSeasonOnCascade(season.seasonId!!)
+                seriesManagerRtDb.child(season.seasonId.toString()).removeValue()
+            }
+        }
     }
 }

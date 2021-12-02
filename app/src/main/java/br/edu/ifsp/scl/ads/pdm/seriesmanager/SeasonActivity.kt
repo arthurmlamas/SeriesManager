@@ -54,6 +54,7 @@ class SeasonActivity : AppCompatActivity(), OnSeasonClickListener {
             show = this
             activitySeasonBinding.showNameTv.text = this.title
         }
+
         activitySeasonBinding.seasonsRv.adapter = seasonsRvAdapter
         activitySeasonBinding.seasonsRv.layoutManager = seasonsLayoutManager
 
@@ -94,10 +95,7 @@ class SeasonActivity : AppCompatActivity(), OnSeasonClickListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when(item.itemId) {
         R.id.refreshMi -> {
-            seasonsList.clear()
-            seasonsList.addAll(seasonController.findAllSeasonsOfShow(show.title))
             seasonsRvAdapter.notifyDataSetChanged()
-
             true
         }
         else -> { false }
@@ -139,5 +137,10 @@ class SeasonActivity : AppCompatActivity(), OnSeasonClickListener {
         val displaySeasonIntent = Intent(this, EpisodeActivity::class.java)
         displaySeasonIntent.putExtra(EXTRA_SEASON, season)
         manageSeasonActivityResultLauncher.launch(displaySeasonIntent)
+    }
+
+    override fun onRestart() {
+        seasonsRvAdapter.notifyDataSetChanged()
+        super.onRestart()
     }
 }

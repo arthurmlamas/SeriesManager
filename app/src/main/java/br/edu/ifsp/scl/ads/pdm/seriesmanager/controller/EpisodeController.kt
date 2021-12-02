@@ -3,10 +3,12 @@ package br.edu.ifsp.scl.ads.pdm.seriesmanager.controller
 import android.content.Context
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.episode.Episode
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.episode.EpisodeDAO
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.repository.firebase.dao.FirebaseEpisodeDAO
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.repository.sqlite.dao.SqliteEpisodeDAO
 
 class EpisodeController(context: Context) {
-    private val episodeDAO: EpisodeDAO = SqliteEpisodeDAO(context)
+//    private val episodeDAO: EpisodeDAO = SqliteEpisodeDAO(context)
+    private val episodeDAO: EpisodeDAO = FirebaseEpisodeDAO()
 
     fun insertEpisode(episode: Episode) = episodeDAO.createEpisode(episode)
     fun findOneEpisode(episodeId: Long) = episodeDAO.findOneEpisode(episodeId)
