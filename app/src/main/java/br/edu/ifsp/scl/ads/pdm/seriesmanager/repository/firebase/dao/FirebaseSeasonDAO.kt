@@ -29,6 +29,7 @@ class FirebaseSeasonDAO : SeasonDAO {
                         seasonsList.add(this)
                     }
                 }
+                generatedSeasonId = autoGenerateSeasonId()
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
@@ -129,6 +130,7 @@ class FirebaseSeasonDAO : SeasonDAO {
     override fun deleteSeason(seasonId: Long): Int {
         deleteSeasonOnCascade(seasonId)
         seriesManagerRtDb.child(seasonId.toString()).removeValue()
+        generatedSeasonId = autoGenerateSeasonId()
         return 1
     }
 
@@ -136,18 +138,7 @@ class FirebaseSeasonDAO : SeasonDAO {
         seriesManagerRtDb.child(season.seasonId.toString()).setValue(season)
     }
 
-    private fun autoGenerateSeasonId(): Long {
-        var i = 0
-        while (i < seasonsList.size) {
-            if (seasonsList[i].seasonId!!.toInt() != i + 1) {
-                return i.toLong() + 1
-            }
-            else {
-                i++
-            }
-        }
-        return seasonsList.size.toLong() + 1
-    }
+    private fun autoGenerateSeasonId(): Long = (seasonsList.lastOrNull { it.seasonId != null} ?: Season()).seasonId!!
 
     private fun deleteSeasonOnCascade(seasonId: Long) {
         episodeDAO.deleteAllEpisodesOfSeason(seasonId)
