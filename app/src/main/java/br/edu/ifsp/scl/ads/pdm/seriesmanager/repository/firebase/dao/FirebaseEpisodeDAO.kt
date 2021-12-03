@@ -149,7 +149,7 @@ class FirebaseEpisodeDAO : EpisodeDAO {
         seriesManagerRtDb.child(episode.episodeId.toString()).setValue(episode)
     }
 
-    private fun autoGenerateEpisodeId(): Long = (episodesList.lastOrNull { it.episodeId != null} ?: Episode()).episodeId!!
+    private fun autoGenerateEpisodeId(): Long = (episodesList.lastOrNull { it.episodeId != null} ?: Episode()).episodeId!! + 1
 
     fun deleteAllEpisodesOfSeason(seasonId: Long) {
         episodesList.forEach { episode ->

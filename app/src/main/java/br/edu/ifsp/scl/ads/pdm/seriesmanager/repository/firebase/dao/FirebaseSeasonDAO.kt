@@ -138,7 +138,7 @@ class FirebaseSeasonDAO : SeasonDAO {
         seriesManagerRtDb.child(season.seasonId.toString()).setValue(season)
     }
 
-    private fun autoGenerateSeasonId(): Long = (seasonsList.lastOrNull { it.seasonId != null} ?: Season()).seasonId!!
+    private fun autoGenerateSeasonId(): Long = (seasonsList.lastOrNull { it.seasonId != null} ?: Season()).seasonId!! + 1
 
     private fun deleteSeasonOnCascade(seasonId: Long) {
         episodeDAO.deleteAllEpisodesOfSeason(seasonId)
